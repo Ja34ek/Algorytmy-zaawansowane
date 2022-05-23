@@ -83,6 +83,32 @@ def d(x,y):
     d=pow(x[0]-y[0],2)+pow(x[1]-y[1],2)
     return round(pow(d,1/2),1)
 
+def objective_value(S,D):
+    M = hungarian(S,D)
+    k = len(D)//len(S)
+    dist = 0
+    for i in range(len(S)):
+                for j in range(len(D)):
+                    if M[j][0] >= i*k and M[j][0] < (i+1)*k:
+                       dist += d(D[M[j][1]-len(D)],S[i])
+    return(dist)
+
+def print_info(S,D):
+    k = len(D)//len(S)
+    print("Szukamy połączenia dla następujących studni:")
+    for i in range(len(S)):
+        print(i+1, S[i][0], S[i][1])
+    print("oraz domów:")
+    for i in range(len(D)):
+        print(i+1, D[i][0], D[i][1])
+    M = hungarian(S,D)
+    print("Znaleziony minimalny koszt wynosi:", objective_value(S,D), ", przy następujących połączeniach:")
+    for i in range(len(S)):
+        temp=""
+        for j in range(len(D)):
+            if M[j][0] >= i*k and M[j][0] < (i+1)*k:
+                temp += (str(M[j][1]-len(D)+1) + ", ")
+        print( i+1, "->",temp[:-2])
 
 
 def Zrob_graf(S,D):
